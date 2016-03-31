@@ -14,6 +14,29 @@ import sourcemaps from 'gulp-sourcemaps';
 import watchify from 'watchify';
 import gutil from 'gulp-util';
 
+var paths = {
+  // sass: ['./scss/**/*.scss'],
+  html: ['./www/index.html', './www/templates/**/*.html'],
+  appjs: './www/js/app.js'
+}
+
+gulp.task('html', done=>{
+    gulp.src(paths.html)
+        .pipe(connect.reload())
+        .on('end', done);
+})
+
+gulp.task('js', done=>{
+    gulp.src(paths.appjs)
+        .pipe(connect.reload())
+        .on('end', done);
+})
+gulp.task('watch', function() {
+    // gulp.watch(paths.sass, ['sass']);
+    gulp.watch(paths.html, ['html']);
+    gulp.watch(paths.appjs, ['js']);
+});
+
 gulp.task('buildEs6', [], ()=>{
     let customOpts = { 
         entries: ['./src/app.js'],
@@ -61,4 +84,4 @@ gulp.task('dev', function(){
 })
 
 // 默认任务
-gulp.task('default', ['dev']);
+gulp.task('default', ['watch', 'dev', 'buildEs6']);
