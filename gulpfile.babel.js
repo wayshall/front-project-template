@@ -17,7 +17,11 @@ import gutil from 'gulp-util';
 var paths = {
   // sass: ['./scss/**/*.scss'],
   html: ['./www/index.html', './www/templates/**/*.html'],
-  appjs: './www/js/app.js'
+  jshintDir: './www/js/**/*.js',
+  browserifyEntries:['./src/app.js'],
+  browserifyDestDir: './www/js',
+  browserifyBundleJs: 'app.js',
+  bundleJs: './www/js/app.js'
 }
 
 gulp.task('html', done=>{
@@ -27,19 +31,19 @@ gulp.task('html', done=>{
 })
 
 gulp.task('js', done=>{
-    gulp.src(paths.appjs)
+    gulp.src(paths.bundleJs)
         .pipe(connect.reload())
         .on('end', done);
 })
 gulp.task('watch', function() {
     // gulp.watch(paths.sass, ['sass']);
     gulp.watch(paths.html, ['html']);
-    gulp.watch(paths.appjs, ['js']);
+    gulp.watch(paths.bundleJs, ['js']);
 });
 
 gulp.task('buildEs6', [], ()=>{
     let customOpts = { 
-        entries: ['./src/app.js'],
+        entries: paths.browserifyEntries,
         debug: true,
         cache: {}, 
         packageCache: {},
@@ -60,17 +64,17 @@ gulp.task('buildEs6', [], ()=>{
 function bundle(b) {
     return b.bundle()
               .on('error', function(err) { console.log('Error: ' + err.message); })
-              .pipe(source('app.js'))
+              .pipe(source(paths.browserifyBundleJs))
               // .pipe(annotate())
               .pipe(buffer())
               .pipe(sourcemaps.init({loadMaps: true}))
               .pipe(sourcemaps.write('./')) 
-              .pipe(gulp.dest('www/js'));
+              .pipe(gulp.dest(paths.browserifyDestDir));
 }
 
 // 建立任务
 gulp.task('jshint', function() {
-    gulp.src('./js/*.js')
+    gulp.src(paths.jshintDir)
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });

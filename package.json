@@ -1,7 +1,7 @@
 {
-  "name": "front-project-template",
+  "name": "html-component",
   "version": "1.0.0",
-  "description": "front project template",
+  "description": "my html component",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
